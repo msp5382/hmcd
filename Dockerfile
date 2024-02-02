@@ -31,8 +31,8 @@ RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
     apt-get install --assume-yes --no-install-recommends \
       docker-compose \
-      docker.io
-
+      docker.io \
+      git 
 # run the app
 USER bun
 EXPOSE 3000/tcp
