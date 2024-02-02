@@ -15,9 +15,7 @@ const options: Partial<SimpleGitOptions> = {
   binary: "git",
   maxConcurrentProcesses: 6,
   trimmed: false,
-  config: [
-    `credential.helper='!f() { echo "username=${GH_USER}"; echo "password=${GH_PAT}"; }; f'`,
-  ],
+  config: [`user.name=${GH_USER}`, `user.password=${GH_PAT}`],
 };
 
 const git: SimpleGit = simpleGit(options);
@@ -31,6 +29,7 @@ const afterClone = async () => {
 
   const composeFilename = composeLocation.split(path.sep).pop();
   try {
+    await $`docker login -u ${GH_USER} -p ${GH_PAT} ghcr.io`;
     await $`docker-compose -f ${composeFilename} up -d`
       .cwd(path.dirname(composeLocation))
       .env({
