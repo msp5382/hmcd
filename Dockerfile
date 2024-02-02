@@ -34,6 +34,6 @@ RUN apt-get update \
       docker.io \
       git 
 # run the app
-USER bun
+USER root
 EXPOSE 3000/tcp
 ENTRYPOINT [ "bun", "run", "index.ts" ]
