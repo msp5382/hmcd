@@ -27,6 +27,12 @@ COPY --from=install /temp/prod/node_modules node_modules
 COPY --from=prerelease /usr/src/app/index.ts .
 COPY --from=prerelease /usr/src/app/package.json .
 
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive \
+    apt-get install --assume-yes --no-install-recommends \
+      docker-compose \
+      docker.io
+
 # run the app
 USER bun
 EXPOSE 3000/tcp
