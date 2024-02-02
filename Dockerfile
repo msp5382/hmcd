@@ -1,11 +1,16 @@
 # use the official Bun image
 # see all versions at https://hub.docker.com/r/oven/bun/tags
-FROM oven/bun:1 as base
+FROM docker:dind as base
 WORKDIR /usr/src/app
 
 # install dependencies into temp directory
 # this will cache them and speed up future builds
 FROM base AS install
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive \
+    apt-get install --assume-yes --no-install-recommends \
+    curl 
+RUN curl -fsSL https://bun.sh/install | bash 
 RUN mkdir -p /temp/dev
 COPY package.json bun.lockb /temp/dev/
 RUN cd /temp/dev && bun install --frozen-lockfile
@@ -30,16 +35,7 @@ COPY --from=prerelease /usr/src/app/package.json .
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
     apt-get install --assume-yes --no-install-recommends \
-      docker-compose \
-      docker.io \
       git 
-
-RUN type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y) \
-    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    && sudo apt update \
-    && sudo apt install gh -y
 
 USER root
 EXPOSE 3000/tcp
