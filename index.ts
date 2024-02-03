@@ -30,7 +30,7 @@ const afterClone = async () => {
   const composeFilename = composeLocation.split(path.sep).pop();
   try {
     await $`docker login -u ${GH_USER} -p ${GH_PAT} ghcr.io`;
-    await $`docker-compose -f ${composeFilename} up -d`
+    await $`docker compose -f ${composeFilename} up -d`
       .cwd(path.dirname(composeLocation))
       .env({
         BUILDKIT_PROGRESS: "plain",
