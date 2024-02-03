@@ -90,7 +90,7 @@ RUN apk --no-cache add \
       *) echo "error: unsupported architecture '$arch'"; exit 1 ;; \
     esac
 
-FROM alpine/git:2.36.3
+FROM alpine
 
 # Disable the runtime transpiler cache by default inside Docker containers.
 # On ephemeral containers, the cache is not useful
@@ -121,6 +121,7 @@ RUN echo "http://ftp.halifax.rwth-aachen.de/alpine/v3.16/community" >> /etc/apk/
 RUN apk add docker docker-cli-compose
 
 # install git 
+RUN apk add git
 
 RUN git config --global credential.helper 'store --file /etc/.config/git/credentials'
 RUN git config --global credential.useHttpPath true
