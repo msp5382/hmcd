@@ -40,7 +40,7 @@ const afterClone = async () => {
   }
 };
 
-app.get("/webhook", async (req, res) => {
+app.all("/webhook", async (req, res) => {
   try {
     if (!fs.existsSync(workDir)) {
       fs.mkdirSync(workDir);
