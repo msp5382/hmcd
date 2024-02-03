@@ -48,7 +48,7 @@ app.get("/webhook", async (req, res) => {
         .cwd(workDir)
         .clone(
           REPO?.replace("github.com", `${GH_PAT}@github.com`) as string,
-          workDir
+          "."
         );
       console.log("Cloned the repo");
       res.send("Webhook received!");
