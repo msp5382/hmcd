@@ -15,7 +15,7 @@ const options: Partial<SimpleGitOptions> = {
   binary: "git",
   maxConcurrentProcesses: 6,
   trimmed: false,
-  config: [`user.name=${GH_USER}`, `user.password=${GH_PAT}`],
+  config: [`user.name=${GH_USER}`],
 };
 
 const git: SimpleGit = simpleGit(options);
@@ -44,7 +44,12 @@ app.get("/webhook", async (req, res) => {
   try {
     if (!fs.existsSync(workDir)) {
       fs.mkdirSync(workDir);
-      await git.cwd(workDir).clone(REPO as string, workDir);
+      await git
+        .cwd(workDir)
+        .clone(
+          REPO?.replace("github.com", `${GH_PAT}@github.com`) as string,
+          workDir
+        );
       console.log("Cloned the repo");
       res.send("Webhook received!");
       afterClone();
